@@ -8,7 +8,7 @@ or something of that nature.
 
 ## If you plan to collaborate with one or two classmates, what are their names?
 
-Ewen Mackay, Johnny Tan, and Md Ar-Rashid
+Our team: Ewen Mackay, Johnny Tan, and Md Ar-Rashid
 
 ## Do you have any questions of your own?
 
