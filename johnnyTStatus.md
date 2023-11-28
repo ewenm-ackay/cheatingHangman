@@ -2,15 +2,15 @@
 
 #### Your name
 
-TODO
+Johnny Tan
 
 #### Your section leader's name
 
-TODO
+Xinwen Zhang
 
 #### Project title
 
-TODO
+Cheating Hangman
 
 ***
 
@@ -18,12 +18,12 @@ Short answers for the below questions suffice. If you want to alter your plan fo
 
 #### What have you done for your project so far?
 
-TODO
+I have created the size and length of the hanging man using turtle.
 
 #### What have you not done for your project yet?
 
-TODO
+I have yet to link a function with each drawn part of the hanging man's body parts.
 
 #### What problems, if any, have you encountered?
 
-TODO
+No problems yet
