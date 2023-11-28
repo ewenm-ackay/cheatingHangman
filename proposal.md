@@ -12,7 +12,7 @@ We will design a hangman game that cheats by choosing a new word based on the us
 
 ***Our guaranteed deliverable:*** A logically sound, perfected version of Cheating Hangman. The user will be allowed to pick between 1 guess and 25 guesses. The user can input a cheatcode to get an extra 26th guess to guarantee they guess the word. We want to draw the hangman, even if its with words. If the user chooses 26 guesses, each incorrect guess will correspond with one of the folowing body parts, returned in a print statement. Head, body, left arm, right arm, left leg, right leg, left thumb, right thumb, left big toe, right big toe, on and on until we have 20 toes, 2 arms, 2 legs, a body, and a head, for a total of 26 guesses. 
 1. If the user inputs 1 guess: the entire body is drawn on failure.
-2. If the user inputs 2 guesses: the head, the body and one arm for the first failure and one arm, the left and the right left on the second failure (no toes)
+2. If the user inputs 2 guesses: the head, the body and one arm for the first failure and one arm, the left and the right leg on the second failure (no toes)
 3. If the user inputs 3  guesses: the head and the body on the first failure, two arms on the second and two legs on the third.
 4. If the user inputs 4 guesses: the head on the first failure, the body on the second, two arms on the third, and two legs on the fourth.
 5. If the user inputs 5 guesses: The head and body will be drawn on the first failure, and each limb drawn seperately consequitevely.
