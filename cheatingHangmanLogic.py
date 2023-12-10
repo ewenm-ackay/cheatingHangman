@@ -4,6 +4,7 @@
 # in this file
 
 from time import sleep
+import random
 
 cheatword = "Dr. Rosen"
 # initialize game with needed parameters
@@ -28,23 +29,6 @@ def userStart():
         slowPrint('Do you understand the rules? If not, enter \'Teach me\'.', 0.1)
         tutorial = str(input("Enter:"))
 
-# user decide difficulty
-
-def userDifficulty(cheatword):
-    """Allows a user to choose from Easy, Hard and Impossible"""
-    possDiff = ['easy','hard','impossible',cheatword]
-    slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.")
-    difficulty = input("Difficulty:").lower()
-    while difficulty not in possDiff:
-        slowPrint("Please try again. You may have made a typo.")
-        difficulty = input("Difficulty:").lower()
-    if difficulty in possDiff:
-        slowPrint(f"You have chosen {difficulty}, good luck!")
-        if difficulty == "impossible":
-            slowPrint("You have made a big mistake. Mwahahaha!", .1)
-        elif difficulty == cheatword:
-            slowPrint("Well, since you asked SO nicely, and I promised I would go easy if you asked nicely, I'll go easy on you.\nYou have the max number of guesses, 27.")
-    return difficulty
 
 # user declare guesses
 
@@ -84,6 +68,58 @@ def gameStatus():
 
 
 # generate new families {"_ _ _ _": listOfWords}
+
+threeLongWord = ['was', 'has', 'top']
+fourLongWord = ['four', 'beet','lope']
+fiveLongWord = ['bleat', 'freak', 'proud']
+
+hangmanLibrary = {3:threeLongWord, 4:fourLongWord, 5:fiveLongWord}
+
+def userDifficulty(cheatword):
+    """Allows a user to choose from Easy, Hard and Impossible"""
+    possDiff = ['easy','hard','impossible',cheatword]
+    slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.")
+    difficulty = input("Difficulty:").lower()
+    while difficulty not in possDiff:
+        slowPrint("Please try again. You may have made a typo.")
+        difficulty = input("Difficulty:").lower()
+    if difficulty in possDiff:
+        slowPrint(f"You have chosen {difficulty}, good luck!")
+        if difficulty == "impossible":
+            slowPrint("You have made a big mistake. Mwahahaha!", .1)
+        elif difficulty == cheatword:
+            slowPrint("Well, since you asked SO nicely, and I promised I would go easy if you asked nicely, I'll go easy on you.\nYou have the max number of guesses, 27.")
+    return difficulty
+
+# choose word
+
+def chooseWord(length, words):
+    word = hangmanLibrary[length[random.choice]]
+
+
+# user decide difficulty
+
+def userDifficulty(cheatword):
+    """Allows a user to choose from Easy, Hard and Impossible"""
+    possDiff = ['easy','hard','impossible',cheatword]
+    slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.")
+    difficulty = input("Difficulty:").lower()
+    while difficulty not in possDiff:
+        slowPrint("Please try again. You may have made a typo.")
+        difficulty = input("Difficulty:").lower()
+    if difficulty in possDiff:
+        slowPrint(f"You have chosen {difficulty}, good luck!")
+        if difficulty == "impossible":
+            slowPrint("You have made a big mistake. Mwahahaha!", .1)
+        elif difficulty == cheatword:
+            slowPrint("Well, since you asked SO nicely, and I promised I would go easy if you asked nicely, I'll go easy on you.\nYou have the max number of guesses, 27.")
+    return difficulty
+
+# user guess
+
+def userGuess():
+    guess = str(input(slowPrint("Your guess here:", .01)))
+    return guess
 
 
 def main():
