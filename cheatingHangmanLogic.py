@@ -93,13 +93,11 @@ def userDifficulty(cheatword):
             slowPrint("Well, since you asked SO nicely, and I promised I would go easy if you asked nicely, I'll go easy on you.\nYou have the max number of guesses, 26.")
     return difficulty
 
-# user guess
+# user set length
 
-def userGuess():
-    guess = input(slowPrint("Your guess here:", .01))
-    if type(guess) != int:
-        input(slowPrint("Please try again.\nYour guess here:", .01))
-    return guess
+def userSetLength():
+    length = input(slowPrint("How long can my word be?\nEnter a number between 2 and 8:"))
+
 
 def main():
     userStart()
@@ -113,6 +111,10 @@ if __name__ == "__main__":
 
 # cheating hangman algorithm
 
+def cheatingHangman():
+    userLength = userSetLength()
+    gameWord = chooseWord(userLength)
+    guess = letterGuess()
 
 
 # choose initial word
@@ -124,9 +126,12 @@ def chooseWord(length, words):
 # user guesses letter
 
 def letterGuess(gameStatus, chosenWord):
+
     pass
 
 # print game status "_ _ _ _"
+# takes gameStatus = ['_ _ _ _', ['head', 'body','left arm']]
 
-def printGameStatus(gameStatus):
-    pass
+def printGameStatus(gameStatus, guesses):
+    slowPrint(f'Current Progress:{gameStatus[0]}\nYou have {guesses} guesses left.{gameStatus[1]}')
+    return gameStatus
