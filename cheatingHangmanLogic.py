@@ -8,7 +8,13 @@ import random
 
 cheatword = "Dr. Rosen"
 
-# initialize game with needed parameters
+threeLongWord = ['was', 'has', 'top']
+fourLongWord = ['four', 'beet','lope']
+fiveLongWord = ['bleat', 'freak', 'proud']
+
+hangmanLibrary = {3:threeLongWord, 4:fourLongWord, 5:fiveLongWord}
+
+
 
 def slowPrint(string, delay = .1, end="\n"):
     """given a string, print each character with given delay, and given an end character"""
@@ -35,57 +41,39 @@ def userStart():
 
 def validGuess(difficulty, guesses, cheatword = "Dr. Rosen", maxG = 25):
     if type(guesses) != int:
-        return False
+        return [False]
     elif difficulty == "hard":
         maxG = 6
     elif difficulty == "easy" or difficulty == "impossible":
         maxG = 25
     elif difficulty == cheatword:
         maxG = 26
-    if guesses <= maxG:
-        return True
-    return False
+    if guesses > maxG or guesses <= 0:
+        return [False]
+    return [True, maxG]
 
 
 def getGuesses(difficulty):
     if difficulty == "easy" or difficulty == "impossible":
         slowPrint("How many guesses would you like? The maximum is 25 (or is it?). ")
-        guesses = (input("Guesses:"))
-        while validGuess(difficulty, guesses):
-            slowPrint(f"Alright, {guesses} guesses it is!")
-            return int(guesses)
-        while not validGuess(difficulty, guesses):
-            slowPrint("That is an invalid amount of guesses. Please enter a number between 1 and 25.", 0.01)
-            guesses = input("Guesses:")
-    if difficulty == "hard":
-        slowPrint("Due to your difficulty choice, you only get 6 or less guesses. Please choose how many guesses you would like.", 0.01)
-        guesses = input("Guesses:")
-        while validGuess(difficulty, guesses):
-            slowPrint(f"Alright, {guesses} guesses it is!")
-        while not validGuess(difficulty, guesses):
-            slowPrint("I apologize, but if I gave you more than 6 guesses, this game wouldn't be so hard, now WOULD it?\nYou chose your own difficulty, after all!\nPlease choose a number less than 6.", 0.01)
-            guesses = input("Guesses:")
-
-# print game status "_ _ _ _"
-
-def printGameStatus(gameStatus):
-    pass
-
+    elif difficulty == "hard":
+        slowPrint("Due to your difficulty choice, you only get 6 or less guesses. Please choose how many guesses you would like.")
+    while True:
+        try:
+            guesses = int(input("Guesses:"))
+            validity = validGuess(difficulty, guesses)
+            if validity[0]:
+                slowPrint(f"Alright, {guesses} guesses it is!")
+                return guesses
+            else:
+                if difficulty == "hard":
+                    slowPrint("That is an invalid amount of guesses. Please enter a number between 1 and 6.", 0.01)
+                else:
+                    slowPrint("That is an invalid amount of guesses. Please enter a number between 1 and 25.", 0.01)
+        except ValueError:
+            slowPrint("Please enter a valid number.", 0.01)
 
 # generate new families {"_ _ _ _": listOfWords}
-
-threeLongWord = ['was', 'has', 'top']
-fourLongWord = ['four', 'beet','lope']
-fiveLongWord = ['bleat', 'freak', 'proud']
-
-hangmanLibrary = {3:threeLongWord, 4:fourLongWord, 5:fiveLongWord}
-
-
-# choose word
-
-def chooseWord(length, words):
-    word = hangmanLibrary[length[random.choice]]
-
 
 # user decide difficulty
 
@@ -108,7 +96,9 @@ def userDifficulty(cheatword):
 # user guess
 
 def userGuess():
-    guess = str(input(slowPrint("Your guess here:", .01)))
+    guess = input(slowPrint("Your guess here:", .01))
+    if type(guess) != int:
+        input(slowPrint("Please try again.\nYour guess here:", .01))
     return guess
 
 def main():
@@ -120,3 +110,23 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# cheating hangman algorithm
+
+
+
+# choose initial word
+
+def chooseWord(length, words):
+    word = random.choice(words[length])
+    return word
+
+# user guesses letter
+
+def letterGuess(gameStatus, chosenWord):
+    pass
+
+# print game status "_ _ _ _"
+
+def printGameStatus(gameStatus):
+    pass
