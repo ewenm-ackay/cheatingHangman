@@ -2,17 +2,8 @@
 # we dont want to write the whole game in here, this is just experimental
 # kind of like a brainstorming page. any features we want to add should start
 # in this file
-
 from time import sleep
 import random
-
-cheatword = "Dr. Rosen"
-
-threeLongWord = ['was', 'has', 'top']
-fourLongWord = ['four', 'beet','lope']
-fiveLongWord = ['bleat', 'freak', 'proud']
-
-hangmanLibrary = {3:threeLongWord, 4:fourLongWord, 5:fiveLongWord}
 
 # utlitiy print function
 
@@ -38,15 +29,13 @@ def tutorial():
 
 # validates if guess number is valid
 
-def validGuess(difficulty, guesses, cheatword = "Dr. Rosen", maxG = 25):
+def validGuess(difficulty, guesses, maxG = 25):
     if type(guesses) != int:
         return [False]
     elif difficulty == "hard":
         maxG = 6
     elif difficulty == "easy" or difficulty == "impossible":
         maxG = 25
-    elif difficulty == cheatword:
-        maxG = 26
     if guesses > maxG or guesses <= 0:
         return [False]
     return [True, maxG]
@@ -55,7 +44,7 @@ def validGuess(difficulty, guesses, cheatword = "Dr. Rosen", maxG = 25):
 
 def getGuesses(difficulty):
     if difficulty == "easy" or difficulty == "impossible":
-        slowPrint("How many guesses would you like? The maximum is 25 (or is it?). ")
+        slowPrint("How many guesses would you like? The maximum is 25.")
     elif difficulty == "hard":
         slowPrint("Due to your difficulty choice, you only get 6 or less guesses. Please choose how many guesses you would like.")
     while True:
@@ -75,9 +64,9 @@ def getGuesses(difficulty):
 
 # user decide difficulty
 
-def userDifficulty(cheatword):
+def userDifficulty():
     """Allows a user to choose from Easy, Hard and Impossible"""
-    possDiff = ['easy','hard','impossible',cheatword]
+    possDiff = ['easy','hard','impossible']
     slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.")
     difficulty = input("Difficulty:").lower()
     while difficulty not in possDiff:
@@ -97,8 +86,8 @@ def userSetLength():
     length = -1
     while type(length) is not int or (length > 8 or length < 2):
         try: 
-            slowPrint("How long can my word be?\nEnter a number between 2 and 8:", 0.1, "")
-            length = int(input())
+            slowPrint("How long can my word be?\nEnter a number between 2 and 8:", 0.1, end = "")
+            length = int(input("Enter:"))
         except:
             continue
     return length
@@ -150,43 +139,79 @@ def pickFamily(families):
     
 # user guesses letter
 
-def userGuess(guesses):
+def userGuess():
     guess = ''
-    while type(guess) is not str and len(guess) != 1:
+    while type(guess) is not str or len(guess) != 1:
         try:
             slowPrint('Please enter a letter you have not guessed yet.', 0.01, "")
             guess = str(input(''))
         except:
             continue
-    return [guess, guesses-1]           
+    return guess          
         
 
 # print game status "_ _ _ _"
-        # takes gameStatus = ['_ _ _ _', ['head', 'body','left arm']]
+        # takes gameStatus = '_ _ _ _']
 
-def printGameStatus(gameStatus, guesses):
-    slowPrint(f'Current Progress:{gameStatus[0]}\nYou have {guesses} guesses left.{gameStatus[1]}')
-    return gameStatus
+def printGameStatus(families, guesses):
+    status = list(families.keys())[0]
+    slowPrint(f'Current Progress:{status}\nYou have {guesses} guesses left.')
+    
+# hangman for easy and hard difficulties
+def hangman(gameWordList, wordLength, guesses):
+    chosen_word = random.choice(gameWordList)
+    wordLength = len(chosen_word)
+    end_of_game = False
+    display = []
+    for _ in range(wordLength):
+        display += "_"
+    while not end_of_game:
+        guess = input("Guess a letter: ").lower()
+        if guess in display:
+            print(f"You've already guessed {guess}")
+        for position in range(wordLength):
+            letter = chosen_word[position]
+            if letter == guess:
+                display[position] = letter
+        if guess not in chosen_word:
+            print(f"You guessed {guess}, that's not in the word. You lose a life.")
+            guesses -= 1
+            if guesses == 0:
+                end_of_game = True
+                print("You lose.")
 
-
+###
+# game start
+# user chooses length
+# initialize families
+# user guesses
+# generate new families
+# pick new family
+# check if user wins
+# loop                  ### 
 
 def main():
     tutorial()
-    difficulty = userDifficulty(cheatword)
+    difficulty = userDifficulty()
     userGuesses = getGuesses(difficulty)
     wordLength = userSetLength()
     families = initFamily(wordLength)
     if difficulty == "impossible":
+        incorrectGuesses = 0
         while userGuesses > 0:
-            guessAndGuesses = userGuess(userGuesses)
-            guess = guessAndGuesses[0]
-            userGuesses = guessAndGuesses[1]
+            guess = userGuess()
             families = generateFamilies(families, wordLength, guess)
-            newFam = pickFamily(families)
+            families = pickFamily(families)
+            userGuesses -= 1
+            printGameStatus(families, userGuesses)
+            letterGuesses = letterGuesses.append(guess)
+            slowPrint(f"You have guesses {letterGuesses} so far.", 0.01)
+            if "_" not in list(families.keys())[0]:
+                slowPrint("What... what is happening? How did you guess that?\nYou've... beaten me... impossible. Well done.\nYOU WIN!")
         else:
-            """end game"""
-    else:
+            slowPrint(f'Nice try, but you lost. Good game!\nThe word was {(families[1][0])}.')
+    elif difficulty:
         """Normal hangman woohoo"""
-
+        #hangman(gameWordList, wordLength, userGuesses)
 if __name__ == "__main__":
     main()
