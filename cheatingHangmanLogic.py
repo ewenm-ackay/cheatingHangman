@@ -4,7 +4,7 @@
 # in this file
 from time import sleep
 import random
-
+gameWordList = open("words_alpha.csv", 'r').read().split('\n')
 # utlitiy print function
 
 def slowPrint(string, delay = .1, end="\n"):
@@ -17,8 +17,8 @@ def slowPrint(string, delay = .1, end="\n"):
 # tutorial
 
 def tutorial():
-    slowPrint("Welcome to Hangman Unmastered!")
-    slowPrint("If you do not know how to play, enter \'Teach me.\' If you do, enter nothing.")
+    slowPrint("Welcome to Hangman Unmastered!", 0.15)
+    slowPrint("If you do not know how to play, enter \'Teach me.\' If you do, enter nothing.", 0.01)
     tutorial = str(input("Enter:"))
     while tutorial.lower() == "teach me":
         slowPrint(
@@ -44,15 +44,15 @@ def validGuess(difficulty, guesses, maxG = 25):
 
 def getGuesses(difficulty):
     if difficulty == "easy" or difficulty == "impossible":
-        slowPrint("How many guesses would you like? The maximum is 25.")
+        slowPrint("How many guesses would you like? The maximum is 25.", 0.01)
     elif difficulty == "hard":
-        slowPrint("Due to your difficulty choice, you only get 6 or less guesses. Please choose how many guesses you would like.")
+        slowPrint("Due to your difficulty choice, you only get 6 or less guesses. Please choose how many guesses you would like.", 0.01)
     while True:
         try:
             guesses = int(input("Guesses:"))
             validity = validGuess(difficulty, guesses)
             if validity[0]:
-                slowPrint(f"Alright, {guesses} guesses it is!")
+                slowPrint(f"Alright, {guesses} guesses it is!", 0.01)
                 return guesses
             else:
                 if difficulty == "hard":
@@ -67,17 +67,15 @@ def getGuesses(difficulty):
 def userDifficulty():
     """Allows a user to choose from Easy, Hard and Impossible"""
     possDiff = ['easy','hard','impossible']
-    slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.")
+    slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.", 0.01)
     difficulty = input("Difficulty:").lower()
     while difficulty not in possDiff:
-        slowPrint("Please try again. You may have made a typo.")
+        slowPrint("Please try again. You may have made a typo.", 0.01)
         difficulty = input("Difficulty:").lower()
     if difficulty in possDiff:
-        slowPrint(f"You have chosen {difficulty}, good luck!")
+        slowPrint(f"You have chosen {difficulty}, good luck!", 0.01)
         if difficulty == "impossible":
-            slowPrint("You have made a big mistake. Mwahahaha!")
-        elif difficulty == cheatword:
-            slowPrint("Well, since you asked SO nicely, and I promised I would go easy if you asked nicely, I'll go easy on you.\nYou have the max number of guesses, 26.")
+            slowPrint("You have made a big mistake. Mwahahaha!", 0.01)
     return difficulty
 
 # user set length
@@ -86,7 +84,7 @@ def userSetLength():
     length = -1
     while type(length) is not int or (length > 8 or length < 2):
         try: 
-            slowPrint("How long can my word be?\nEnter a number between 2 and 8:", 0.1, end = "")
+            slowPrint("How long can my word be?\nEnter a number between 2 and 8:", 0.01)
             length = int(input("Enter:"))
         except:
             continue
@@ -155,7 +153,7 @@ def userGuess():
 
 def printGameStatus(families, guesses):
     status = list(families.keys())[0]
-    slowPrint(f'Current Progress:{status}\nYou have {guesses} guesses left.')
+    slowPrint(f'Current Progress:{status}\nYou have {guesses} guesses left.', 0.01)
     
 # hangman for easy and hard difficulties
 def hangman(gameWordList, wordLength, guesses):
@@ -191,27 +189,31 @@ def hangman(gameWordList, wordLength, guesses):
 # loop                  ### 
 
 def main():
+    incorrectGuesses = 0
+    letterGuesses = []
     tutorial()
     difficulty = userDifficulty()
     userGuesses = getGuesses(difficulty)
     wordLength = userSetLength()
     families = initFamily(wordLength)
     if difficulty == "impossible":
-        incorrectGuesses = 0
         while userGuesses > 0:
             guess = userGuess()
+            while guess in letterGuesses:
+                slowPrint("You have already guessed this letter, try again.", 0.01)
+                guess = userGuess()
             families = generateFamilies(families, wordLength, guess)
             families = pickFamily(families)
             userGuesses -= 1
             printGameStatus(families, userGuesses)
-            letterGuesses = letterGuesses.append(guess)
-            slowPrint(f"You have guesses {letterGuesses} so far.", 0.01)
+            letterGuesses+= guess
+            slowPrint(f"You have guessed {letterGuesses} so far.", 0.01)
             if "_" not in list(families.keys())[0]:
                 slowPrint("What... what is happening? How did you guess that?\nYou've... beaten me... impossible. Well done.\nYOU WIN!")
         else:
-            slowPrint(f'Nice try, but you lost. Good game!\nThe word was {(families[1][0])}.')
+            slowPrint(f'Nice try, but you lost. Good game!\nThe word was {random.choice(list(families.keys())[0])}.')
     elif difficulty:
         """Normal hangman woohoo"""
-        #hangman(gameWordList, wordLength, userGuesses)
+        hangman(gameWordList, wordLength, userGuesses)
 if __name__ == "__main__":
     main()
