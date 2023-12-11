@@ -1,9 +1,12 @@
 import random
+from .hangmanASCII import stages
 
 
 # GLOBALS:::
 wordList = open("words_alpha.csv", 'r')
-lines = wordList.readlines()
+wordArr = wordList.readlines()
+for word in wordArr:
+    if len(word) <= 2:
 
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
@@ -52,5 +55,4 @@ while not end_of_game:
         print("You win.")
 
 
-    from hangman_art import stages
     print(stages[lives])
