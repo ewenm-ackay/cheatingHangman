@@ -5,6 +5,7 @@
 from time import sleep
 import random
 gameWordList = list(open("words_vowels.csv", 'r').read().split('\n'))
+
 # utlitiy print function
 
 def slowPrint(string, delay = .1, end="\n"):
@@ -94,12 +95,11 @@ def userSetLength():
 
 def initFamily(length):
     words = open("words_vowels.csv", 'r').read().split('\n')
-    # print(words)
     key = "_" * length
     value = [word for word in words if len(word) == length]
     return {key:value}
 
-# families = {"___":[ben] }
+# families = {"___":[ben, yen,] }
 
 def generateFamilies(families, length, guess):
     newFamilies = {}
@@ -200,7 +200,6 @@ def hangman(gameWordList, wordLength, guesses):
 # loop                  ### 
 
 def main():
-    incorrectGuesses = 0
     letterGuesses = []
     tutorial()
     difficulty = userDifficulty()
@@ -217,7 +216,7 @@ def main():
             families = pickFamily(families)
             userGuesses -= 1
             printGameStatus(families, userGuesses)
-            letterGuesses+= guess
+            letterGuesses += guess
             slowPrint(f"You have guessed {letterGuesses} so far.", 0.01)
             if "_" not in list(families.keys())[0]:
                 slowPrint("What... what is happening? How did you guess that?\nYou've... beaten me... impossible. Well done.\nYOU WIN!")
@@ -226,7 +225,7 @@ def main():
             slowPrint(f'Nice try, but you lost. Good game!\nThe word was {list(families.items())[0][1][0]}.')
             userGuesses = 0
     else:
-        """Normal hangman woohoo"""
+        """Normal hangman"""
         hangman(gameWordList, wordLength, userGuesses)
 if __name__ == "__main__":
     main()
