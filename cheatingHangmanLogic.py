@@ -17,7 +17,7 @@ def slowPrint(string, delay = .1, end="\n"):
 # tutorial
 
 def tutorial():
-    slowPrint("Welcome to Hangman Unmastered!", 0.15)
+    slowPrint("Welcome to Hangman Unmastered!", 0.125)
     slowPrint("If you do not know how to play, enter \'Teach me.\' If you do, enter nothing.", 0.01)
     tutorial = str(input("Enter:"))
     while tutorial.lower() == "teach me":
@@ -44,7 +44,7 @@ def validGuess(difficulty, guesses, maxG = 25):
 
 def getGuesses(difficulty):
     if difficulty == "easy" or difficulty == "impossible":
-        slowPrint("How many guesses would you like? The maximum is 25.", 0.01)
+        slowPrint("How many guesses would you like? The maximum is 25.", 0.1)
     elif difficulty == "hard":
         slowPrint("Due to your difficulty choice, you only get 6 or less guesses. Please choose how many guesses you would like.", 0.01)
     while True:
@@ -67,24 +67,24 @@ def getGuesses(difficulty):
 def userDifficulty():
     """Allows a user to choose from Easy, Hard and Impossible"""
     possDiff = ['easy','hard','impossible']
-    slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.", 0.01)
+    slowPrint("What difficulty would you like? Choose from Easy, Hard, and Impossible.", 0.1)
     difficulty = input("Difficulty:").lower()
     while difficulty not in possDiff:
         slowPrint("Please try again. You may have made a typo.", 0.01)
         difficulty = input("Difficulty:").lower()
     if difficulty in possDiff:
-        slowPrint(f"You have chosen {difficulty}, good luck!", 0.01)
+        slowPrint(f"You have chosen {difficulty}, good luck!", 0.1)
         if difficulty == "impossible":
-            slowPrint("You have made a big mistake. Mwahahaha!", 0.01)
+            slowPrint("You have made a big mistake. Mwahahaha!", 0.1)
     return difficulty
 
 # user set length
 
 def userSetLength():
     length = -1
-    while type(length) is not int or (length > 8 or length < 2):
+    while type(length) is not int or (length > 7 or length < 3):
         try: 
-            slowPrint("How long can my word be?\nEnter a number between 2 and 8:", 0.01)
+            slowPrint("How long can my word be?\nEnter a number between 3 and 7:", 0.01)
             length = int(input("Enter:"))
         except:
             continue
@@ -142,7 +142,7 @@ def userGuess():
     while type(guess) is not str or len(guess) != 1:
         try:
             slowPrint('Please enter a letter you have not guessed yet.', 0.01, "")
-            guess = str(input(''))
+            guess = str(input('Guess a letter:'))
         except:
             continue
     return guess          
@@ -183,7 +183,8 @@ def hangman(gameWordList, wordLength, guesses):
             if guesses == 0:
                 end_of_game = True
                 slowPrint(f"You lose.\n The word was {chosen_word}", 0.15)
-        slowPrint(f"{' '.join(display)}", 0.075)
+                break
+        slowPrint(f"{''.join(display)}", 0.075)
         if "_" not in display:
             end_of_game = True
             print("You win.")
@@ -220,8 +221,10 @@ def main():
             slowPrint(f"You have guessed {letterGuesses} so far.", 0.01)
             if "_" not in list(families.keys())[0]:
                 slowPrint("What... what is happening? How did you guess that?\nYou've... beaten me... impossible. Well done.\nYOU WIN!")
+                userGuesses = 0
         else:
-            slowPrint(f'Nice try, but you lost. Good game!\nThe word was {random.choice(list(families.keys())[0])}.')
+            slowPrint(f'Nice try, but you lost. Good game!\nThe word was {list(families.items())[0][1][0]}.')
+            userGuesses = 0
     else:
         """Normal hangman woohoo"""
         hangman(gameWordList, wordLength, userGuesses)
