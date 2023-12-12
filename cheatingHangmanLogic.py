@@ -4,7 +4,7 @@
 # in this file
 from time import sleep
 import random
-gameWordList = open("words_alpha.csv", 'r').read().split('\n')
+gameWordList = list(open("words_vowels.csv", 'r').read().split('\n'))
 # utlitiy print function
 
 def slowPrint(string, delay = .1, end="\n"):
@@ -93,7 +93,7 @@ def userSetLength():
 # choose initial family
 
 def initFamily(length):
-    words = open("words_alpha.csv", 'r').read().split('\n')
+    words = open("words_vowels.csv", 'r').read().split('\n')
     # print(words)
     key = "_" * length
     value = [word for word in words if len(word) == length]
@@ -111,7 +111,7 @@ def generateFamilies(families, length, guess):
                     if word[i] == guess:
                         temp += guess
                     else: 
-                        temp += '_'
+                        temp += family[0][i]
                 try:    
                     newFamilies[temp].append(word)
                 except: 
@@ -158,25 +158,35 @@ def printGameStatus(families, guesses):
 # hangman for easy and hard difficulties
 def hangman(gameWordList, wordLength, guesses):
     chosen_word = random.choice(gameWordList)
-    wordLength = len(chosen_word)
+    while len(chosen_word) != wordLength:
+        chosen_word = random.choice(gameWordList)
     end_of_game = False
+    wrongGuesses = []
     display = []
     for _ in range(wordLength):
         display += "_"
     while not end_of_game:
         guess = input("Guess a letter: ").lower()
-        if guess in display:
-            print(f"You've already guessed {guess}")
+        if guess in display or guess in wrongGuesses:
+            slowPrint(f"You've already guessed {guess}.", 0.01)
+            continue
         for position in range(wordLength):
             letter = chosen_word[position]
             if letter == guess:
                 display[position] = letter
+                slowPrint("That is correct.", 0.01)
         if guess not in chosen_word:
-            print(f"You guessed {guess}, that's not in the word. You lose a life.")
+            slowPrint(f"You guessed {guess}, which is incorrect.\nYou have {guesses-1} lives left", 0.01)
+            wrongGuesses += guess
+            print(f"Graveyard: {wrongGuesses}")
             guesses -= 1
             if guesses == 0:
                 end_of_game = True
-                print("You lose.")
+                slowPrint(f"You lose.\n The word was {chosen_word}", 0.15)
+        slowPrint(f"{' '.join(display)}", 0.075)
+        if "_" not in display:
+            end_of_game = True
+            print("You win.")
 
 ###
 # game start
@@ -212,7 +222,7 @@ def main():
                 slowPrint("What... what is happening? How did you guess that?\nYou've... beaten me... impossible. Well done.\nYOU WIN!")
         else:
             slowPrint(f'Nice try, but you lost. Good game!\nThe word was {random.choice(list(families.keys())[0])}.')
-    elif difficulty:
+    else:
         """Normal hangman woohoo"""
         hangman(gameWordList, wordLength, userGuesses)
 if __name__ == "__main__":
